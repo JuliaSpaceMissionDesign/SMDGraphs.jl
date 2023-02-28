@@ -1,0 +1,13 @@
+name = "MultiGraphs"
+uuid = "3cb9d4dc-0a5d-4917-ab7c-1a21a1c41a88"
+authors = ["andreapasquale94 <andrea.pasquale@polimi.it> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
