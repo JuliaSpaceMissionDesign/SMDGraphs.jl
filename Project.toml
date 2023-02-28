@@ -3,6 +3,9 @@ uuid = "3cb9d4dc-0a5d-4917-ab7c-1a21a1c41a88"
 authors = ["andreapasquale94 <andrea.pasquale@polimi.it> and contributors"]
 version = "0.1.0"
 
+[deps]
+Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
+
 [compat]
 julia = "1"
 
