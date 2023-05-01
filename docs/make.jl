@@ -10,5 +10,6 @@ makedocs(;
 )
 
 deploydocs(; 
-    repo="github.com/JuliaSpaceMissionDesign/SMDGraphs.jl",
+    repo="github.com/JuliaSpaceMissionDesign/SMDGraphs.jl.git",
+    branch = "gh-pages",
 )
