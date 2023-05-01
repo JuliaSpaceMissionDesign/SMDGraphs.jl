@@ -1,4 +1,4 @@
-module MultiGraphs
+module SMDGraphs
 
 # Write your package code here.
 include("abstract.jl")

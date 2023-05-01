@@ -1,6 +1,6 @@
-using MultiGraphs
+using SMDGraphs
 using Test
 
-@testset "MultiGraphs.jl" begin
+@testset "SMDGraphs.jl" begin
     # Write your tests here.
 end
