@@ -19,7 +19,7 @@ jobs:
            Pkg.add("Documenter")
            Pkg.develop(PackageSpec(path=pwd()))
            Pkg.instantiate()
-        shell: julia --project=docs/ -e
+        shell: julia --project=docs/ -e {0}
       - name: Build and deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # For authentication with GitHub Actions token
