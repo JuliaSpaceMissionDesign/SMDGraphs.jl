@@ -15,14 +15,14 @@ jobs:
           version: '1.8'
       - name: Install dependencies
         run: |
-           using Pkg 
-           Pkg.add("Documenter")
-           Pkg.develop(PackageSpec(path=pwd()))
-           Pkg.instantiate()
-        shell: julia --project=docs -e {0}
+          julia --color=yes --project=docs/ -e '
+            using Pkg
+            Pkg.add("Documenter")
+            Pkg.develop(PackageSpec(path=pwd()))
+            Pkg.instantiate()'
+        shell: bash
       - name: Build and deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # For authentication with GitHub Actions token
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }} # For authentication with SSH deploy key
-        run: docs/make.jl
-        shell: julia --project=docs --color=yes {0}
+        run: julia --color=yes --project=docs/ docs/make.jl
