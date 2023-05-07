@@ -139,7 +139,7 @@ node with mapped ID `tid`.
 """
 function add_edge_cost!(g::MappedNodeGraph{T}, fid::Int, tid::Int, cost::Int) where {T}
     edges = get!(g.edges, fid, Dict{Int,Int}())
-    push!(edges, tid => cost)
+    return push!(edges, tid => cost)
 end
 
 """ 
@@ -148,14 +148,14 @@ end
 For a `SimpleGraph` type, register the edge cost between the nodes with mapped IDs 
 `fid` and `tid` in both directions.  
 """
-function add_edge_cost!(g::MappedNodeGraph{T, N}, fid::Int, tid::Int, cost::Int) where {T, N <: SimpleGraph}
-
+function add_edge_cost!(
+    g::MappedNodeGraph{T,N}, fid::Int, tid::Int, cost::Int
+) where {T,N<:SimpleGraph}
     edges = get!(g.edges, fid, Dict{Int,Int}())
     edges = get!(g.edges, tid, Dict{Int,Int}())
 
     push!(edges, tid => cost)
-    push!(edges, fid => cost)
-
+    return push!(edges, fid => cost)
 end
 
 """

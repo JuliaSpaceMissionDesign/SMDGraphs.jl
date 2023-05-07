@@ -2,12 +2,10 @@ using SMDGraphs
 using Graphs
 using Test
 
-import SMDGraphs: MappedGraph, 
-                  MappedDiGraph, 
-                  MappedNodeGraph
+import SMDGraphs: MappedGraph, MappedDiGraph, MappedNodeGraph
 
 # Simple Node graph for testing purposes
-struct IntNode <: SMDGraphs.AbstractGraphNode 
+struct IntNode <: SMDGraphs.AbstractGraphNode
     id::Int
 end
 
@@ -18,24 +16,24 @@ end
 SMDGraphs.get_node_id(n::IntNode) = n.id
 
 @testset "SMDGraphs.jl" begin
-    
+
     # Check Error Enforcement 
     @test_throws ErrorException SMDGraphs.get_node_id(FakeNode(7))
 
     # Test MappedGraph Constructor
     graph = MappedGraph(IntNode)
-    @test isa(graph, SMDGraphs.MappedNodeGraph{IntNode, SimpleGraph{Int64}})
+    @test isa(graph, SMDGraphs.MappedNodeGraph{IntNode,SimpleGraph{Int64}})
 
     graph2 = MappedNodeGraph{IntNode}()
-    @test isa(graph, SMDGraphs.MappedNodeGraph{IntNode, SimpleGraph{Int64}})
+    @test isa(graph, SMDGraphs.MappedNodeGraph{IntNode,SimpleGraph{Int64}})
 
     dgraph = MappedDiGraph(IntNode)
-    @test isa(dgraph, SMDGraphs.MappedNodeGraph{IntNode, SimpleDiGraph{Int64}})
+    @test isa(dgraph, SMDGraphs.MappedNodeGraph{IntNode,SimpleDiGraph{Int64}})
 
     @test isempty(graph)
     @test isempty(dgraph)
 
-    node_a = IntNode(10) 
+    node_a = IntNode(10)
     node_b = IntNode(7)
     node_c = IntNode(1)
 
@@ -77,13 +75,11 @@ SMDGraphs.get_node_id(n::IntNode) = n.id
     # Check path computation 
     SMDGraphs.compute_paths!(graph)
 
-    @test SMDGraphs.get_path(graph, 1, 7)  == [3, 1, 2]
+    @test SMDGraphs.get_path(graph, 1, 7) == [3, 1, 2]
     @test SMDGraphs.get_path(graph, 1, 10) == [3, 1]
 
     # Check edge cost 
     @test SMDGraphs.get_edgecosts(graph, 8, 2) == Int64[]
     @test SMDGraphs.get_edgecosts(graph, 1, 10) == [7]
     @test SMDGraphs.get_edgecosts(graph, 1, 7) == [7, 0]
-    
-    
 end;
