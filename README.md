@@ -8,6 +8,7 @@
 
 _A simple, light, and flexible API for graph-like data structure handling._
 
+SMDGraphs.jl offers a set of light-weight wrappers around [Graphs.jl](https://github.com/JuliaGraphs/Graphs.jl) that enable efficient graph operations on custom user-defined datatypes.
 
 ## Installation
 
