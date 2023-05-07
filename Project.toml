@@ -1,7 +1,7 @@
 name = "SMDGraphs"
 uuid = "b792745b-7241-45be-ba96-70eb67e8468f"
 authors = ["Andrea Pasquale <andrea.pasquale@polimi.it> and Michele Ceresoli <michele.ceresoli@polimi.it>"]
-version = "0.1.1"
+version = "1.0.0"
 
 [deps]
 Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
