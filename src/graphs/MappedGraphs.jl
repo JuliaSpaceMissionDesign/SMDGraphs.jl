@@ -14,19 +14,20 @@ Create a graph with mapped nodes.
 ### Constructors
 - `MappedNodeGraph{N}(g::G) where {G <: AbstractGraph, N <: AbstractGraphNode}`
 """
-struct MappedNodeGraph{N, G}
-    graph::G             
-    mid::Dict{Int, Int} # mapped ids 
-    nodes::Vector{N}               
-    paths::Dict{Int, Dict{Int, Vector{Int}}} 
-    edges::Dict{Int, Dict{Int, Int}}         
+struct MappedNodeGraph{N,G}
+    graph::G
+    mid::Dict{Int,Int} # mapped ids 
+    nodes::Vector{N}
+    paths::Dict{Int,Dict{Int,Vector{Int}}}
+    edges::Dict{Int,Dict{Int,Int}}
 
-    function MappedNodeGraph{N}(g::G) where {G <: AbstractGraph, N <: AbstractGraphNode}
-        new{N, G}(g, 
-            Dict{Int, Int}(), 
+    function MappedNodeGraph{N}(g::G) where {G<:AbstractGraph,N<:AbstractGraphNode}
+        return new{N,G}(
+            g,
+            Dict{Int,Int}(),
             Vector{N}(undef, 0),
-            Dict{Int, Dict{Int, Int}}(), 
-            Dict{Int, Dict{Int, Int}}(),
+            Dict{Int,Dict{Int,Int}}(),
+            Dict{Int,Dict{Int,Int}}(),
         )
     end
 end
@@ -93,18 +94,18 @@ Add `node` to the graph `g`.
 """
 function add_vertex!(g::MappedNodeGraph{T}, node::T) where {T<:AbstractGraphNode}
     nodeid = get_node_id(node)
-    has_vertex(g, nodeid) && return 
+    has_vertex(g, nodeid) && return nothing
 
     # insert a new vertex 
     add_vertex!(g.graph)
 
     # compute mapped id
-    mid = nv(g.graph) 
+    mid = nv(g.graph)
 
     # updates graph
     push!(g.mid, nodeid => mid)
     push!(g.nodes, node)
-    nothing
+    return nothing
 end
 
 """
@@ -122,9 +123,9 @@ function add_edge!(g::MappedNodeGraph{T}, from::Int, to::Int, cost::Int=0) where
     add_edge!(g.graph, get_mappedid(g, from), get_mappedid(g, to))
     compute_paths!(g)
 
-    edges = get!(g.edges, from, Dict{Int, Int}())
+    edges = get!(g.edges, from, Dict{Int,Int}())
     push!(edges, to => cost)
-    nothing 
+    return nothing
 end
 
 """
@@ -133,20 +134,20 @@ end
 Compute all possible paths in the graph.
 """
 function compute_paths!(g::MappedNodeGraph{T}) where {T}
-    for (oiid, origin) in enumerate(g.nodes) 
+    for (oiid, origin) in enumerate(g.nodes)
         oid = get_node_id(origin)
 
         ds = dijkstra_shortest_paths(g.graph, oiid)
         for (tiid, target) in enumerate(g.nodes)
-            oiid == tiid && continue 
+            oiid == tiid && continue
             tid = get_node_id(target)
 
             path = enumerate_paths(ds, tiid)
-            paths = get!(g.paths, oid, Dict{Int, Vector{Int}}())
+            paths = get!(g.paths, oid, Dict{Int,Vector{Int}}())
             push!(paths, tid => path)
         end
     end
-    nothing 
+    return nothing
 end
 
 """
@@ -155,7 +156,7 @@ end
 Get the nodes on the path between and including `from` and `to`. Returns an empty array if 
 either `from` or `to` are not a part of `g` or if there is no path between them. 
 """
-function get_path(g::MappedNodeGraph{T}, from::Int, to::Int) where T
+function get_path(g::MappedNodeGraph{T}, from::Int, to::Int) where {T}
     (has_vertex(g, from) && has_vertex(g, to)) || return Int[]
     return g.paths[from][to]
 end
@@ -169,9 +170,9 @@ either `from` or `to` are not a part of `g` or if there is no path between them.
 function get_edgecosts(g::MappedNodeGraph{T}, from::Int, to::Int) where {T}
     path = get_path(g, from, to)
     isempty(path) && return Int[]
-    edges = Vector{Int}(undef, length(path)-1)
+    edges = Vector{Int}(undef, length(path) - 1)
     for i in eachindex(edges)
-        edges[i] = g.edges[path[i]][path[i+1]]
+        edges[i] = g.edges[path[i]][path[i + 1]]
     end
-    return edges 
+    return edges
 end
