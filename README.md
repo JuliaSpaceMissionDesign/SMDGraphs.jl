@@ -8,7 +8,9 @@ _A simple, light, and flexible API for graph-like data structure handling._
 [![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/invenia/BlueStyle)
 
 
-SMDGraphs.jl offers a set of light-weight wrappers around [Graphs.jl](https://github.com/JuliaGraphs/Graphs.jl) that enable efficient graph operations on custom user-defined datatypes.
+The purpose of SMDGraphs.jl is to enable efficient support for graph operations and analysis 
+on custom user-defined datatypes. It achieves so by offering a set of light-weight wrappers 
+around [Graphs.jl](https://github.com/JuliaGraphs/Graphs.jl). 
 
 ## Installation
 
@@ -23,5 +25,5 @@ Please refer to the [documentation](https://juliaspacemissiondesign.github.io/SM
 
 ## Supporting
 
-This package was developed as part of [JSMD](https://github.com/JuliaSpaceMissionDesign) ecosystem. 
+This package was developed as part of the [JSMD](https://github.com/JuliaSpaceMissionDesign) ecosystem. 
 If you found this package useful in your applications, please consider starring the repository.
