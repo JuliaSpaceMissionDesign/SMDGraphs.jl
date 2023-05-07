@@ -120,12 +120,42 @@ function add_edge!(g::MappedNodeGraph{T}, from::Int, to::Int, cost::Int=0) where
         throw(ErrorException("The vertex $from or $to is not contained in the graph."))
     end
 
-    add_edge!(g.graph, get_mappedid(g, from), get_mappedid(g, to))
+    fid = get_mappedid(g, from)
+    tid = get_mappedid(g, to)
+
+    add_edge!(g.graph, fid, tid)
     compute_paths!(g)
 
-    edges = get!(g.edges, from, Dict{Int,Int}())
-    push!(edges, to => cost)
+    add_edge_cost!(g, fid, tid, cost)
+
     return nothing
+end
+
+""" 
+    add_edge_cost!(g::MappedNodeGraph, fid::Int, tid::Int, cost::Int)
+
+Register the cost between of the edge from the node with mapped ID `fid` to the 
+node with mapped ID `tid`. 
+"""
+function add_edge_cost!(g::MappedNodeGraph{T}, fid::Int, tid::Int, cost::Int) where {T}
+    edges = get!(g.edges, fid, Dict{Int,Int}())
+    push!(edges, tid => cost)
+end
+
+""" 
+    add_edge_cost!(g::MappedNodeGraph, fid::Int, tid::Int, cost::Int)
+
+For a `SimpleGraph` type, register the edge cost between the nodes with mapped IDs 
+`fid` and `tid` in both directions.  
+"""
+function add_edge_cost!(g::MappedNodeGraph{T, N}, fid::Int, tid::Int, cost::Int) where {T, N <: SimpleGraph}
+
+    edges = get!(g.edges, fid, Dict{Int,Int}())
+    edges = get!(g.edges, tid, Dict{Int,Int}())
+
+    push!(edges, tid => cost)
+    push!(edges, fid => cost)
+
 end
 
 """
