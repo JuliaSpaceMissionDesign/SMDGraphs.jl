@@ -22,5 +22,5 @@ Please refer to the [documentation](https://juliaspacemissiondesign.github.io/SM
 
 ## Supporting
 
-This package was developed as part of JSMD ecosystem. If you found this package useful in 
-your applications, please consider starring the repository.
+This package was developed as part of [JSMD](https://github.com/JuliaSpaceMissionDesign) ecosystem. 
+If you found this package useful in your applications, please consider starring the repository.
