@@ -41,8 +41,9 @@ SMDGraphs.get_node_id(n::IntNode) = n.id
     SMDGraphs.add_vertex!(graph, node_a)
     SMDGraphs.add_vertex!(graph, node_b)
 
-    SMDGraphs.add_vertex!(graph2, node_a)
-    SMDGraphs.add_vertex!(graph2, node_b)
+    SMDGraphs.add_vertex!(dgraph, node_a)
+    SMDGraphs.add_vertex!(dgraph, node_b)
+    SMDGraphs.add_vertex!(dgraph, node_c)
 
     @test !isempty(graph)
 
@@ -68,7 +69,8 @@ SMDGraphs.get_node_id(n::IntNode) = n.id
     SMDGraphs.add_edge!(graph, 10, 1, 7)
     @test SMDGraphs.has_path(graph, 1, 7)
 
-    SMDGraphs.add_edge!(graph2, 10, 7, 6)
+    SMDGraphs.add_edge!(dgraph, 10, 7, 6)
+    SMDGraphs.add_edge!(dgraph, 7, 1, 3)
 
     @test_throws ErrorException SMDGraphs.add_edge!(graph, 10, 8)
 
@@ -82,4 +84,9 @@ SMDGraphs.get_node_id(n::IntNode) = n.id
     @test SMDGraphs.get_edgecosts(graph, 8, 2) == Int64[]
     @test SMDGraphs.get_edgecosts(graph, 1, 10) == [7]
     @test SMDGraphs.get_edgecosts(graph, 1, 7) == [7, 0]
+    @test SMDGraphs.get_edgecosts(graph, 10, 1) == [7]
+
+    @test SMDGraphs.get_edgecosts(dgraph, 10, 1) == [6, 3]
+
+
 end;
