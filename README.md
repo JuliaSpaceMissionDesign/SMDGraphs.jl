@@ -7,3 +7,20 @@
 [![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/invenia/BlueStyle)
 
 _A simple, light, and flexible API for graph-like data structure handling._
+
+
+## Installation
+
+This package can be installed using Julia's package manager: 
+```julia
+julia> import Pkg; 
+julia> Pkg.add("SMDGraphs.jl")
+```
+
+## Documentation 
+Please refer to the [documentation](https://juliaspacemissiondesign.github.io/SMDGraphs.jl/stable/) for additional information.
+
+## Supporting
+
+This package was developed as part of JSMD ecosystem. If you found this package useful in 
+your applications, please consider starring the repository.
