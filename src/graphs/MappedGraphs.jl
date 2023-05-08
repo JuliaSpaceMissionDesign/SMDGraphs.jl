@@ -143,7 +143,7 @@ function add_edge_cost!(g::MappedNodeGraph{T}, fid::Int, tid::Int, cost::Int) wh
 end
 
 """ 
-    add_edge_cost!(g::MappedNodeGraph, fid::Int, tid::Int, cost::Int)
+    add_edge_cost!(g::MappedNodeGraph{T, <:SimpleGraph}, fid::Int, tid::Int, cost::Int)
 
 For a `SimpleGraph` type, register the edge cost between the nodes with mapped IDs 
 `fid` and `tid` in both directions.  

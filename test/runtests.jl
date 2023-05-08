@@ -74,9 +74,6 @@ SMDGraphs.get_node_id(n::IntNode) = n.id
 
     @test_throws ErrorException SMDGraphs.add_edge!(graph, 10, 8)
 
-    # Check path computation 
-    SMDGraphs.compute_paths!(graph)
-
     @test SMDGraphs.get_path(graph, 1, 7) == [3, 1, 2]
     @test SMDGraphs.get_path(graph, 1, 10) == [3, 1]
 

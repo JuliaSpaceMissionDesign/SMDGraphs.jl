@@ -6,6 +6,9 @@ makedocs(;
     modules=[SMDGraphs],
     pages=[
         "Home" => "index.md", 
+        "Graph Types" => [
+            "Mapped Graphs" => "mappedgraph.md"
+        ],
         "API" => "api.md"
     ],
 

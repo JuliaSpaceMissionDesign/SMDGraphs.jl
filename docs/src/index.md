@@ -9,10 +9,15 @@ around [Graphs.jl](https://github.com/JuliaGraphs/Graphs.jl).
 
 ## Installation 
 This package can be installed using Julia's package manager: 
-```julia
+```julia-repl
 julia> import Pkg; 
 julia> Pkg.add("SMDGraphs.jl")
 ```
+
+## Overview
+This package currently supports the following graph-like structures:
+
+ - __Mapped-Node Graphs__ 
 
 ## Supporting
 This package was developed as part of the [JSMD](https://github.com/JuliaSpaceMissionDesign) ecosystem. 
