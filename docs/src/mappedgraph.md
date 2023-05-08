@@ -87,7 +87,7 @@ Connections between the items in the graph are easily added as follows:
 SMDGraphs.add_edge!(graph, 10, 399)
 SMDGraphs.add_edge!(graph, 399, 301)
 ```
-By providing an additional integer input to [`add_edge`](@ref), a weight factor 
+By providing an additional integer input to [`SMDGraphs.add_edge!`](@ref), a weight factor 
 can be associated to the edge. The default weight is null.
 
 Finally, the path between two nodes is retrived as: 
@@ -97,4 +97,4 @@ julia> print(path)
 [2, 1, 3]
 ```
 
-Note that [`SMDGraphs.get_path`](@ref) returns an integer vector of internal IDs instead of the user-defined ones. This enables a faster retrieval of the nodes via [`SMDGraphs.get_mappednode`](@ref), allowing to avoid the dictionary lookup for the ID mapping of each node in the path.
+Note that [`SMDGraphs.get_path`](@ref) returns an integer vector of internal IDs instead of the user-defined ones. This enables a faster retrieval of the nodes via [`SMDGraphs.get_mappednode`](@ref), allowing to skip the dictionary lookup for the ID mapping of each node in the path.
