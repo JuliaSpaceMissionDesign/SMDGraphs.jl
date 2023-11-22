@@ -1,6 +1,17 @@
 
 """
-    MappedNodeGraph{N, G}
+    get_node_id(b::AbstractJSMDGraphNode)   
+
+Get the mapped-id of an `AbstractJSMDGraphNode`.
+
+!!! warning
+    This method is abstract! A concrete implementation for each concrete node shall be defined.
+"""
+@interface function get_node_id(::AbstractJSMDGraphNode) end 
+
+
+"""
+    MappedNodeGraph{N, G} 
 
 Create a graph with mapped nodes. 
 
@@ -14,14 +25,14 @@ Create a graph with mapped nodes.
 ### Constructors
 - `MappedNodeGraph{N}(g::G) where {G <: AbstractGraph, N <: AbstractGraphNode}`
 """
-struct MappedNodeGraph{N,G}
+struct MappedNodeGraph{N,G} <: AbstractJSMDGraph{Int}
     graph::G
     mid::Dict{Int,Int} # mapped ids 
     nodes::Vector{N}
     paths::Dict{Int,Dict{Int,Vector{Int}}}
     edges::Dict{Int,Dict{Int,Int}}
 
-    function MappedNodeGraph{N}(g::G) where {G<:AbstractGraph,N<:AbstractGraphNode}
+    function MappedNodeGraph{N}(g::G) where {G<:AbstractGraph, N<:AbstractJSMDGraphNode}
         return new{N,G}(
             g,
             Dict{Int,Int}(),
@@ -71,28 +82,34 @@ Get the node associated with a node index.
 
 Base.isempty(g::MappedNodeGraph) = Base.isempty(g.nodes)
 
-"""
-    has_vertex(g, node)
 
-Return true if `node` is contained in the graph `g`.
-"""
-@inline has_vertex(g::MappedNodeGraph, node::Int) = haskey(g.mid, node)
+# JSMD Interfaces
+# =======================
 
-"""
-    has_path(g, from, to)
+# TODO: change this functions to use mapped IDs as inputs! 
 
-Return true if there is a path between `from` and `to` in the graph `g`.
-"""
-function has_path(g::MappedNodeGraph, from::Int, to::Int)
-    return has_path(g.graph, get_mappedid(g, from), get_mappedid(g, to))
-end
+has_vertex(g::MappedNodeGraph, node::Int) = haskey(g.mid, node)
+has_edge(g::MappedNodeGraph, from::Int, to::Int) = has_edge(g.graph, from, to)
+
+edges(g::MappedNodeGraph) = edges(g.graph)
+edgetype(g::MappedNodeGraph) = edgetype(g.graph)
+
+inneighbors(g::MappedNodeGraph) = inneighbors(g.graph)
+is_directed(g::MappedNodeGraph) = is_directed(g.graph) 
+
+ne(g::MappedNodeGraph) = ne(g.graph)
+nv(g::MappedNodeGraph) = nv(g.graph)
+
+outneighbors(g::MappedNodeGraph) = outneighbors(g.graph)
+
+vertices(g::MappedNodeGraph) = vertices(g.graph)
 
 """
     add_vertex!(g, node)
 
 Add `node` to the graph `g`.
 """
-function add_vertex!(g::MappedNodeGraph{T}, node::T) where {T<:AbstractGraphNode}
+function add_vertex!(g::MappedNodeGraph{T}, node::T) where {T<:AbstractJSMDGraphNode}
     nodeid = get_node_id(node)
     has_vertex(g, nodeid) && return nothing
 
@@ -130,6 +147,17 @@ function add_edge!(g::MappedNodeGraph{T}, from::Int, to::Int, cost::Int=0) where
 
     return nothing
 end
+
+
+"""
+    has_path(g, from, to)
+
+Return true if there is a path between `from` and `to` in the graph `g`.
+"""
+function has_path(g::MappedNodeGraph, from::Int, to::Int)
+    return has_path(g.graph, get_mappedid(g, from), get_mappedid(g, to))
+end
+
 
 """ 
     add_edge_cost!(g::MappedNodeGraph, fid::Int, tid::Int, cost::Int)
