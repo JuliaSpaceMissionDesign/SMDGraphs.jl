@@ -3,6 +3,7 @@ using Test
 
 using Graphs
 
+import JSMDInterfaces.Errors: NotImplementedError
 import JSMDInterfaces.Graph as jGraph
 import SMDGraphs: MappedGraph, MappedDiGraph, MappedNodeGraph
 
@@ -20,7 +21,7 @@ SMDGraphs.get_node_id(n::IntNode) = n.id
 @testset "SMDGraphs.jl" begin
 
     # Check Error Enforcement 
-    @test_throws ErrorException SMDGraphs.get_node_id(FakeNode(7))
+    @test_throws NotImplementedError SMDGraphs.get_node_id(FakeNode(7))
 
     # Test MappedGraph Constructor
     graph = MappedGraph(IntNode)
