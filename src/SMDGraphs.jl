@@ -1,29 +1,31 @@
 module SMDGraphs
 
-using JSMDInterfaces.Interface: @interface
+using JSMDInterfaces.Interface
 
-import JSMDInterfaces: 
+import JSMDInterfaces.Graph: 
     AbstractJSMDGraphNode, 
-    AbstractJSMDGraph
+    AbstractJSMDGraph, 
+    add_edge!, 
+    add_vertex!, 
+    edges, 
+    edgetype, 
+    get_path,
+    has_vertex, 
+    has_edge, 
+    has_path, 
+    inneighbors, 
+    is_directed, 
+    ne, 
+    nv, 
+    outneighbors, 
+    vertices
 
 import Graphs:
-    AbstractGraph
+    AbstractGraph,
     SimpleGraph,
     SimpleDiGraph,
-    add_edge!,
-    add_vertex!,
     dijkstra_shortest_paths,
-    edges,
-    edgetype,
-    enumerate_paths,
-    has_edge,
-    has_path,
-    has_vertex, 
-    is_directed,
-    ne,
-    nv,
-    vertices
-    
+    enumerate_paths
 
 include("graphs/MappedGraphs.jl")
 

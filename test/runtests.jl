@@ -1,15 +1,17 @@
 using SMDGraphs
-using Graphs
 using Test
 
+using Graphs
+
+import JSMDInterfaces.Graph as jGraph
 import SMDGraphs: MappedGraph, MappedDiGraph, MappedNodeGraph
 
 # Simple Node graph for testing purposes
-struct IntNode <: SMDGraphs.AbstractGraphNode
+struct IntNode <: jGraph.AbstractJSMDGraphNode
     id::Int
 end
 
-struct FakeNode <: SMDGraphs.AbstractGraphNode
+struct FakeNode <: jGraph.AbstractJSMDGraphNode
     id::Int
 end
 
