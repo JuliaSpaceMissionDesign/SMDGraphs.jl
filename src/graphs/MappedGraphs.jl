@@ -108,7 +108,7 @@ function has_edge(g::MappedNodeGraph, from::Int, to::Int)
 end 
 
 function edges(g::MappedNodeGraph)
-    map(e->Graphs.SimpleEdge(get_outer_id(e.src), get_outer_id(e.dst)), edges(g.graph))
+    map(e->Graphs.SimpleEdge(get_outerid(g, e.src), get_outerid(g, e.dst)), edges(g.graph))
 end
 
 edgetype(g::MappedNodeGraph) = edgetype(g.graph)
@@ -119,11 +119,11 @@ ne(g::MappedNodeGraph) = ne(g.graph)
 nv(g::MappedNodeGraph) = nv(g.graph)
 
 function inneighbors(g::MappedNodeGraph, node::Int)
-    map(get_outerid, inneighbors(g.graph, node))
+    map(x->get_outerid(g, x), inneighbors(g.graph, get_mappedid(g, node)))
 end 
 
 function outneighbors(g::MappedNodeGraph, node::Int)
-    map(get_outerid, outneighbors(g.graph, node))
+    map(x->get_outerid(g, x), outneighbors(g.graph, get_mappedid(g, node)))
 end
     
 vertices(g::MappedNodeGraph) = map(get_node_id, g.nodes)
