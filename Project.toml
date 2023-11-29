@@ -9,7 +9,7 @@ JSMDInterfaces = "6b30ee2f-618e-4a15-bf4e-7df7b496e609"
 
 [compat]
 Graphs = "1"
-JSMDInterfaces = "1.4"
+JSMDInterfaces = "1.5"
 julia = "1.6"
 
 [extras]
