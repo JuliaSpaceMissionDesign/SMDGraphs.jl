@@ -62,14 +62,16 @@ MappedDiGraph(::Type{N}) where {N} = MappedNodeGraph{N}(SimpleDiGraph{Int}())
 """
     get_mappedid(g::MappedNodeGraph, node::Int)
 
-Get the mappedid associated with a node.
+Get the mappedid associated with a node. The mappedid is the internal ID that is assigned 
+to the node within the graph.
 """
 @inline get_mappedid(g::MappedNodeGraph, node::Int) = g.mid[node]
 
 """
     get_outerid(g::MappedNodeGraph, id::Int)
 
-Return the id of the node associated to the mapped id `id`.
+Return the id of the node associated to the mapped id `id`. The outer ID is the ID that is 
+assigned to the node by the user.
 """
 @inline get_outerid(g::MappedNodeGraph, id::Int) = get_node_id(g.nodes[id])
 
