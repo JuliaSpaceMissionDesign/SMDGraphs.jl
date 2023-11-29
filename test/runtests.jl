@@ -1,7 +1,8 @@
 using SMDGraphs
 using Test
 
-using Graphs: Graphs, SimpleEdge
+using Graphs
+using Graphs: SimpleEdge
 
 import JSMDInterfaces.Errors: NotImplementedError
 import JSMDInterfaces.Graph as jGraph
@@ -112,10 +113,18 @@ SMDGraphs.get_node_id(n::IntNode) = n.id
         @test !SMDGraphs.has_edge(graph, 7, 1)
 
         @test SMDGraphs.ne(graph) == 2
-        @test SMDGraphs.edges(graph) == [Graphs.Simpl]
+        @test SMDGraphs.edges(graph) == [
+            SimpleEdge(10, 7), 
+            SimpleEdge(10, 1)
+        ]
 
         SMDGraphs.add_edge!(dgraph, 10, 7, 6)
         SMDGraphs.add_edge!(dgraph, 7, 1, 3)
+
+        @test SMDGraphs.edges(dgraph) == [
+            SimpleEdge(10, 7), 
+            SimpleEdge(7, 1)
+        ]
 
         @test isempty(SMDGraphs.inneighbors(dgraph, 10))
         @test SMDGraphs.inneighbors(dgraph, 7) == [10]

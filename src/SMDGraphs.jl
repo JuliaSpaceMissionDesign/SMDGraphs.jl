@@ -22,6 +22,7 @@ import JSMDInterfaces.Graph:
 
 import Graphs:
     AbstractGraph,
+    SimpleEdge,
     SimpleGraph,
     SimpleDiGraph,
     dijkstra_shortest_paths,

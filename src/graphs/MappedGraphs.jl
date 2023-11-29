@@ -108,7 +108,7 @@ function has_edge(g::MappedNodeGraph, from::Int, to::Int)
 end 
 
 function edges(g::MappedNodeGraph)
-    map(e->Graphs.SimpleEdge(get_outerid(g, e.src), get_outerid(g, e.dst)), edges(g.graph))
+    map(e->SimpleEdge(get_outerid(g, e.src), get_outerid(g, e.dst)), edges(g.graph))
 end
 
 edgetype(g::MappedNodeGraph) = edgetype(g.graph)
