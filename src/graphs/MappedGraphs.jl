@@ -1,6 +1,17 @@
 
 """
-    MappedNodeGraph{N, G}
+    get_node_id(b::AbstractJSMDGraphNode)   
+
+Get the mapped-id of an `AbstractJSMDGraphNode`.
+
+!!! warning
+    This method is abstract! A concrete implementation for each concrete node shall be defined.
+"""
+@interface function get_node_id(::AbstractJSMDGraphNode) end 
+
+
+"""
+    MappedNodeGraph{N, G} <: AbstractJSMDGraph{Int}
 
 Create a graph with mapped nodes. 
 
@@ -14,14 +25,14 @@ Create a graph with mapped nodes.
 ### Constructors
 - `MappedNodeGraph{N}(g::G) where {G <: AbstractGraph, N <: AbstractGraphNode}`
 """
-struct MappedNodeGraph{N,G}
+struct MappedNodeGraph{N,G} <: AbstractJSMDGraph{Int}
     graph::G
     mid::Dict{Int,Int} # mapped ids 
     nodes::Vector{N}
     paths::Dict{Int,Dict{Int,Vector{Int}}}
     edges::Dict{Int,Dict{Int,Int}}
 
-    function MappedNodeGraph{N}(g::G) where {G<:AbstractGraph,N<:AbstractGraphNode}
+    function MappedNodeGraph{N}(g::G) where {G<:AbstractGraph, N<:AbstractJSMDGraphNode}
         return new{N,G}(
             g,
             Dict{Int,Int}(),
@@ -51,9 +62,18 @@ MappedDiGraph(::Type{N}) where {N} = MappedNodeGraph{N}(SimpleDiGraph{Int}())
 """
     get_mappedid(g::MappedNodeGraph, node::Int)
 
-Get the mappedid associated with a node.
+Get the mappedid associated with a node. The mappedid is the internal ID that is assigned 
+to the node within the graph.
 """
 @inline get_mappedid(g::MappedNodeGraph, node::Int) = g.mid[node]
+
+"""
+    get_outerid(g::MappedNodeGraph, id::Int)
+
+Return the id of the node associated to the mapped id `id`. The outer ID is the ID that is 
+assigned to the node by the user.
+"""
+@inline get_outerid(g::MappedNodeGraph, id::Int) = get_node_id(g.nodes[id])
 
 """
     get_mappednode(g::MappedNodeGraph, mid::Int)
@@ -71,28 +91,48 @@ Get the node associated with a node index.
 
 Base.isempty(g::MappedNodeGraph) = Base.isempty(g.nodes)
 
-"""
-    has_vertex(g, node)
 
-Return true if `node` is contained in the graph `g`.
-"""
-@inline has_vertex(g::MappedNodeGraph, node::Int) = haskey(g.mid, node)
+# Graphs Interfaces
+# =======================
 
-"""
-    has_path(g, from, to)
+has_vertex(g::MappedNodeGraph, node::Int) = haskey(g.mid, node)
 
-Return true if there is a path between `from` and `to` in the graph `g`.
-"""
-function has_path(g::MappedNodeGraph, from::Int, to::Int)
-    return has_path(g.graph, get_mappedid(g, from), get_mappedid(g, to))
+function has_edge(g::MappedNodeGraph, from::Int, to::Int)    
+    # Check whether from and to are registered in the graph
+    (!haskey(g.mid, from) || !haskey(g.mid, to)) && return false 
+
+    fid = get_mappedid(g, from)
+    tid = get_mappedid(g, to)
+
+    has_edge(g.graph, fid, tid)
+end 
+
+function edges(g::MappedNodeGraph)
+    map(e->SimpleEdge(get_outerid(g, e.src), get_outerid(g, e.dst)), edges(g.graph))
 end
 
-"""
-    add_vertex!(g, node)
+edgetype(g::MappedNodeGraph) = edgetype(g.graph)
 
-Add `node` to the graph `g`.
-"""
-function add_vertex!(g::MappedNodeGraph{T}, node::T) where {T<:AbstractGraphNode}
+is_directed(g::MappedNodeGraph) = is_directed(g.graph) 
+
+ne(g::MappedNodeGraph) = ne(g.graph)
+nv(g::MappedNodeGraph) = nv(g.graph)
+
+function inneighbors(g::MappedNodeGraph, node::Int)
+    map(x->get_outerid(g, x), inneighbors(g.graph, get_mappedid(g, node)))
+end 
+
+function outneighbors(g::MappedNodeGraph, node::Int)
+    map(x->get_outerid(g, x), outneighbors(g.graph, get_mappedid(g, node)))
+end
+    
+vertices(g::MappedNodeGraph) = map(get_node_id, g.nodes)
+
+
+# JSMD Interfaces 
+# =======================
+
+function add_vertex!(g::MappedNodeGraph{T}, node::T) where {T<:AbstractJSMDGraphNode}
     nodeid = get_node_id(node)
     has_vertex(g, nodeid) && return nothing
 
@@ -108,12 +148,6 @@ function add_vertex!(g::MappedNodeGraph{T}, node::T) where {T<:AbstractGraphNode
     return nothing
 end
 
-"""
-    add_edge!(g::MappedNodeGraph, from::Int, to::Int, [cost])
-
-Add an edge between `from` and `to` to `g`. 
-Optionally assign a `cost` to the edge.
-"""
 function add_edge!(g::MappedNodeGraph{T}, from::Int, to::Int, cost::Int=0) where {T}
     # ensure the two vertexes already exist in the graph 
     if !(has_vertex(g, from) && has_vertex(g, to))
@@ -130,6 +164,19 @@ function add_edge!(g::MappedNodeGraph{T}, from::Int, to::Int, cost::Int=0) where
 
     return nothing
 end
+
+function has_path(g::MappedNodeGraph, from::Int, to::Int)
+    return has_path(g.graph, get_mappedid(g, from), get_mappedid(g, to))
+end
+
+function get_path(g::MappedNodeGraph{T}, from::Int, to::Int) where {T}
+    (has_vertex(g, from) && has_vertex(g, to)) || return Int[]
+    return g.paths[from][to]
+end
+
+
+# Internal routines
+# =======================
 
 """ 
     add_edge_cost!(g::MappedNodeGraph, fid::Int, tid::Int, cost::Int)
@@ -181,17 +228,6 @@ function compute_paths!(g::MappedNodeGraph{T}) where {T}
         end
     end
     return nothing
-end
-
-"""
-    get_path(g::MappedNodeGraph, from::Int, to::Int)
-
-Get the nodes on the path between and including `from` and `to`. Returns an empty array if 
-either `from` or `to` are not a part of `g` or if there is no path between them. 
-"""
-function get_path(g::MappedNodeGraph{T}, from::Int, to::Int) where {T}
-    (has_vertex(g, from) && has_vertex(g, to)) || return Int[]
-    return g.paths[from][to]
 end
 
 """

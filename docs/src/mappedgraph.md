@@ -5,6 +5,7 @@
 CurrentModule = SMDGraphs
 DocTestSetup = quote 
     using SMDGraphs
+    import JSMDInterfaces.Graph: AbstractJSMDGraphNode
 end
 ```
 
@@ -19,10 +20,12 @@ items in the nodes through this ID.
 ## Usage
 Suppose that you want to create a graph to connect items that store planetary bodies 
 properties. First, we will define our custom node type, which must be 
-a sub-type of [`SMDGraphs.AbstractGraphNode`](@ref):
+a sub-type of `AbstractJSMDGraphNode`:
 
 ```julia
-struct SpaceBody{T} <: SMDGraphs.AbstractGraphNode
+import JSMDInterfaces.Graph: AbstractJSMDGraphNode 
+
+struct SpaceBody{T} <: AbstractGraphNode
     radius::T
     density::T
     id::Int 
@@ -87,7 +90,7 @@ Connections between the items in the graph are easily added as follows:
 SMDGraphs.add_edge!(graph, 10, 399)
 SMDGraphs.add_edge!(graph, 399, 301)
 ```
-By providing an additional integer input to [`SMDGraphs.add_edge!`](@ref), a weight factor 
+By providing an additional integer input to `add_edge!`, a weight factor 
 can be associated to the edge. The default weight is null.
 
 Finally, the path between two nodes is retrived as: 
@@ -97,4 +100,4 @@ julia> print(path)
 [2, 1, 3]
 ```
 
-Note that [`SMDGraphs.get_path`](@ref) returns an integer vector of internal IDs instead of the user-defined ones. This enables a faster retrieval of the nodes via [`SMDGraphs.get_mappednode`](@ref), allowing to skip the dictionary lookup for the ID mapping of each node in the path.
+Note that `get_path` returns an integer vector of internal IDs instead of the user-defined ones. This enables a faster retrieval of the nodes via [`SMDGraphs.get_mappednode`](@ref), allowing to skip the dictionary lookup for the ID mapping of each node in the path.
