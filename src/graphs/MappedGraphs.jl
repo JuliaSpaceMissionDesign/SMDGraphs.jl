@@ -171,7 +171,7 @@ end
 
 function get_path(g::MappedNodeGraph{T}, from::Int, to::Int) where {T}
     (has_vertex(g, from) && has_vertex(g, to)) || return Int[]
-    return g.paths[from][to]
+    return @inbounds g.paths[from][to]
 end
 
 
